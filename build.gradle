@@ -1,0 +1,51 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '4.0.1' apply false
+	id 'io.spring.dependency-management' version '1.1.7' apply false
+}
+
+// 모든 하위 프로젝트(api-gateway, member-service 등)에 공통 적용되는 설정
+subprojects {
+    apply plugin: 'java'
+    apply plugin: 'org.springframework.boot'
+    apply plugin: 'io.spring.dependency-management'
+
+    group = 'com.bitkulry'
+    version = '0.0.1-SNAPSHOT'
+
+    java {
+        sourceCompatibility = '21'
+    }
+    
+    repositories {
+        mavenCentral()
+    }
+
+	ext {
+		set('springCloudVersion', "2024.0.0")
+	}
+
+    // 2. 버전 관리 (Bill of Materials)
+    // 여기서 버전을 관리해주므로, 자식들은 버전 숫자 없이 라이브러리 이름만 쓰면 됩니다.
+	dependencyManagement {
+		imports {
+			mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+		}
+	}
+
+    dependencies {
+        // [공통 적용] 모든 하위 프로젝트에 자동으로 들어갑니다.
+        // 자식 프로젝트에서 따로 적을 필요가 없습니다.
+        compileOnly 'org.projectlombok:lombok'
+        annotationProcessor 'org.projectlombok:lombok'
+
+        // [공통] 테스트 라이브러리
+		testImplementation 'org.springframework.boot:spring-boot-starter-test'
+		testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    }
+    
+    test {
+        useJUnitPlatform()
+        enabled = false
+    }
+}

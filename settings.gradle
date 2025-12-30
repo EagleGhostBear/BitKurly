@@ -1,0 +1,15 @@
+// root/settings.gradle
+
+rootProject.name = 'bitkulry-msa-project'
+
+include 'api-gateway'
+project(':api-gateway').projectDir = file('apps/backend/api-gateway')
+
+include 'auth-service'
+project(':auth-service').projectDir = file('apps/backend/auth-service')
+
+include 'member-service'
+project(':member-service').projectDir = file('apps/backend/member-service')
+
+include 'order-service'
+project(':order-service').projectDir = file('apps/backend/order-service')
