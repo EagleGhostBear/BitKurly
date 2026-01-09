@@ -1,0 +1,47 @@
+# Build & Dependency
+HELP.md
+/build/
+.gradle/
+out/
+bin/
+!gradle/wrapper/gradle-wrapper.jar
+
+# 모든 jar, war, ear 파일 무시
+*.jar
+*.war
+*.ear
+*.nar
+
+# IDE Settings
+# IntelliJ IDEA
+.idea/
+*.iws
+*.iml
+*.ipr
+
+# VS Code (Cursor)
+.vscode/
+.factorypath
+.classpath
+.project
+.settings/
+
+# Eclipse
+.metadata/
+
+# OS & Logs
+# Mac
+.DS_Store
+
+# Windows
+Thumbs.db
+Desktop.ini
+
+# Logs
+*.log
+logs/
+
+# Secrets
+.env
+private.key
+secret.yaml
