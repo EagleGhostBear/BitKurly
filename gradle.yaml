@@ -1,0 +1,7 @@
+org:
+  gradle:
+    # Gradle 데몬 메모리 설정
+    jvmargs: -Xmx2048m -Dfile.encoding=UTF-8
+    # 병렬 빌드 등 성능 최적화
+    daemon: true
+    parallel: true
