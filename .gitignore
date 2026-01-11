@@ -4,7 +4,7 @@ HELP.md
 .gradle/
 out/
 bin/
-!gradle/wrapper/gradle-wrapper.jar
+# !gradle/wrapper/gradle-wrapper.jar
 
 # 모든 jar, war, ear 파일 무시
 *.jar
