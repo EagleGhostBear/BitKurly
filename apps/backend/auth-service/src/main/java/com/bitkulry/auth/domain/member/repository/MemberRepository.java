@@ -1,10 +1,10 @@
-package com.bitkulry.member.repository;
+package com.bitkulry.auth.domain.member.repository;
 
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.bitkulry.member.domain.Member;
+import com.bitkulry.auth.domain.member.entity.Member;
 
 public interface MemberRepository extends JpaRepository<Member, Long> {
     Optional<Member> findById(String id);

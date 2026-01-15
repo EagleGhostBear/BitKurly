@@ -1,3 +1,15 @@
+server:
+  port: 9002
+
 spring:
   application:
     name: auth-service
+
+  config:
+    import: optional:file:.env[.properties]
+
+jwt:
+  # Base64로 인코딩된 임의의 32byte 이상 문자열 (HS256 알고리즘 조건)
+  secret: ${JWT_SECRET}
+  access-expiration: 3600000 # 1시간 (ms 단위)
+  refresh-expiration: 1209600000
