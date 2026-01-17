@@ -1,5 +1,6 @@
 package com.bitkulry.member.service;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.bitkulry.member.domain.Member;
@@ -15,13 +16,26 @@ import lombok.RequiredArgsConstructor;
 public class MemberService {
 
     private final MemberRepository memberRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Transactional
-    public void signUp(SignUpRequest request) {
+    public Long signUp(SignUpRequest request) {
+
+        String encodedPassword = passwordEncoder.encode(request.getPassword());
         // 1. DTO -> Entity 변환 (생성 시점에 값 주입)
-        Member member = request.toEntity();
+        Member member = Member.builder()
+            .id(request.getId())
+            .password(encodedPassword)
+            .name(request.getName())
+            .email(request.getEmail())
+            .phoneNumber(request.getPhoneNumber())
+            .zipcode(request.getZipcode())
+            .address(request.getAddress())
+            .addressDetail(request.getAddressDetail())
+            .role("USER")
+            .build();
 
         // 2. DB 저장
-        memberRepository.save(member);
+        return memberRepository.save(member).getMemberSeq();
     }
 }

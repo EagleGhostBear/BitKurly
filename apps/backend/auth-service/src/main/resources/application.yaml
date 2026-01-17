@@ -8,6 +8,27 @@ spring:
   config:
     import: optional:file:.env[.properties]
 
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ${DATABASE_URL}
+    username: ${DATABASE_USERNAME}
+    password: ${DATABASE_PASSWORD}
+
+  data:
+    redis:
+      host: ${REDIS_HOST}
+      port: 6379
+      password: ${REDIS_PASSWORD}
+    
+  jpa:
+    hibernate:
+      # auth-service는 테이블을 직접 만들지 않고 읽기만 하므로 'validate'나 'none' 추천
+      # 'update'로 하면 실수로 컬럼을 날릴 수도 있으니 조심해야 합니다.
+      ddl-auto: validate 
+    properties:
+      hibernate:
+        format_sql: true
+
 jwt:
   # Base64로 인코딩된 임의의 32byte 이상 문자열 (HS256 알고리즘 조건)
   secret: ${JWT_SECRET}

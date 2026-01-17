@@ -49,10 +49,13 @@ public class Member {
     @LastModifiedDate
     private LocalDateTime updatedAt; // 수정일
 
+    @Column(nullable = false)
+    private String role; // 권한 (USER, ADMIN)
+
     // @Builder를 통해 안전하게 객체 생성
     @Builder
     public Member(String id, String password, String name, String email, String phoneNumber, String zipcode,
-            String address, String addressDetail) {
+            String address, String addressDetail, String role) {
         this.id = id;
         this.password = password;
         this.name = name;
@@ -61,5 +64,6 @@ public class Member {
         this.zipcode = zipcode;
         this.address = address;
         this.addressDetail = addressDetail;
+        this.role = role;
     }
 }

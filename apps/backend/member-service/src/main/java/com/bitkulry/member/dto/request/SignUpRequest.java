@@ -18,6 +18,7 @@ public class SignUpRequest {
     private String addressDetail;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    private String role; // 권한 (USER, ADMIN)
 
     // DTO를 Entity로 변환하는 메서드
     public Member toEntity() {
@@ -30,6 +31,7 @@ public class SignUpRequest {
                 .zipcode(this.zipcode)
                 .address(this.address)
                 .addressDetail(this.addressDetail)
+                .role(this.role)
                 .build();
     }
 }

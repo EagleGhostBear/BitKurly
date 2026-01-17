@@ -5,13 +5,29 @@ spring:
   application:
     name: api-gateway
 
+  config:
+    import: optional:file:.env[.properties]
+
   cloud:
     gateway:
       routes:
-        # [라우팅 규칙 1] Member Service로 가는 길
         - id: member-service
-          # 목적지: 로컬 9001번 포트
           uri: http://localhost:9001
-          # 조건: 주소가 /api/v1/members/** 로 시작하면 여기로 보내라
           predicates:
             - Path=/api/v1/members/**
+          filters:
+            - AuthorizationHeaderFilter
+
+        - id: auth-service
+          uri: http://localhost:9002
+          predicates:
+            - Path=/auth/**
+
+  data:
+    redis:
+      host: ${REDIS_HOST}
+      port: 6379
+      password: ${REDIS_PASSWORD}
+
+jwt:
+  secret: ${JWT_SECRET}
