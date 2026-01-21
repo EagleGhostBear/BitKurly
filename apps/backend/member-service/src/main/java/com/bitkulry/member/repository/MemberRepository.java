@@ -8,4 +8,5 @@ import com.bitkulry.member.domain.Member;
 
 public interface MemberRepository extends JpaRepository<Member, Long> {
     Optional<Member> findById(String id);
+    boolean existsByLoginId(String loginId);
 }

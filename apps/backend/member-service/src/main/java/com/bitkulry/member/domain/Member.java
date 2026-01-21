@@ -20,43 +20,56 @@ public class Member {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long memberSeq; // PK는 Long 타입 권장 (seq -> id로 변경)
+    @Column(name = "member_id")
+    private Long memberId;
 
-    @Column(nullable = false, unique = true, length = 50)
-    private String id; // 로그인용 ID (구분을 위해 이름 변경)
+    @Column(name = "login_id", nullable = false, unique = true, length = 50)
+    private String loginId;
 
-    @Column(nullable = false)
+    @Column(nullable = false) // 길이는 암호화 방식에 따라 다르므로 생략 가능 (기본 255)
     private String password;
 
     @Column(nullable = false, length = 20)
     private String name;
 
-    @Column(nullable = false, unique = true)
-    private String email; // 합쳐서 저장 (user@example.com)
+    @Column(nullable = false, unique = true, length = 100)
+    private String email;
 
-    @Column(length = 20)
-    private String phoneNumber; // 합쳐서 저장 (010-1234-5678)
+    @Column(name = "phone_number", nullable = false, length = 20)
+    private String phoneNumber;
 
-    // 주소 정보
+    // 주소 정보 (값 타입으로 빼도 되지만, 일단 필드로 둡니다)
+    @Column(length = 10)
     private String zipcode;
-    private String address; // addr1 (주소)
-    private String addressDetail; // addr2 (상세주소)
 
+    private String address;
+
+    @Column(name = "address_detail")
+    private String addressDetail;
+
+    // Enum 매핑 (DB에는 문자열 "USER", "BRONZE"로 저장됨)
+    @Enumerated(EnumType.STRING)
+    @Column(length = 20)
+    private Role role;
+
+    @Enumerated(EnumType.STRING)
+    @Column(length = 20)
+    private Grade grade;
+
+    // Auditing (자동 날짜 주입)
     @CreatedDate
-    @Column(updatable = false)
-    private LocalDateTime createdAt; // logtime -> createdAt (가입일)
+    @Column(name = "created_at", updatable = false)
+    private LocalDateTime createdAt;
 
     @LastModifiedDate
-    private LocalDateTime updatedAt; // 수정일
-
-    @Column(nullable = false)
-    private String role; // 권한 (USER, ADMIN)
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
 
     // @Builder를 통해 안전하게 객체 생성
     @Builder
-    public Member(String id, String password, String name, String email, String phoneNumber, String zipcode,
-            String address, String addressDetail, String role) {
-        this.id = id;
+    public Member(String loginId, String password, String name, String email, 
+                  String phoneNumber, String zipcode, String address, String addressDetail, Role role) {
+        this.loginId = loginId;
         this.password = password;
         this.name = name;
         this.email = email;
@@ -64,6 +77,21 @@ public class Member {
         this.zipcode = zipcode;
         this.address = address;
         this.addressDetail = addressDetail;
-        this.role = role;
+        this.role = (role != null) ? role : Role.USER;
+        this.grade = Grade.BRONZE; // default : BRONZE
+    }
+
+    public void updateAddress(String zipcode, String address, String addressDetail) {
+        // 데이터 무결성 검사 (엔티티가 스스로 방어)
+        if (zipcode == null || address == null) {
+            throw new IllegalArgumentException("주소 정보가 누락되었습니다.");
+        }
+        this.zipcode = zipcode;
+        this.address = address;
+        this.addressDetail = addressDetail;
+    }
+
+    public void changePassword(String encryptedPassword) {
+        this.password = encryptedPassword;
     }
 }
