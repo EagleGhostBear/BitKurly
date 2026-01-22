@@ -28,7 +28,7 @@ public class AuthService {
     @Transactional
     public TokenResponse login(LoginRequest request) {
         // 1. ID 검증: 없는 유저면 예외 발생
-        Member member = memberRepository.findById(request.getId())
+        Member member = memberRepository.findByLoginId(request.getLoginId())
                 .orElseThrow(() -> new IllegalArgumentException("가입되지 않은 아이디입니다."));
 
         // 2. 비밀번호 검증: 암호화된 비번과 입력받은 비번 비교
@@ -38,15 +38,15 @@ public class AuthService {
 
         // 3. 토큰 발급 (Access Token & Refresh Token)
         // role이 없다면 "USER"로 하드코딩하거나 Entity에 role 필드를 추가해야 함.
-        String role = member.getRole() != null ? member.getRole() : "USER";
+        String role = (member.getRole() != null) ? member.getRole().name() : "USER";
         
-        String accessToken = jwtTokenProvider.createAccessToken(member.getId(), role);
-        String refreshToken = jwtTokenProvider.createRefreshToken(member.getId()); // Provider에 이 메서드 추가 필요
+        String accessToken = jwtTokenProvider.createAccessToken(member.getLoginId(), role);
+        String refreshToken = jwtTokenProvider.createRefreshToken(member.getLoginId()); // Provider에 이 메서드 추가 필요
 
         // 4. Redis에 Refresh Token 저장 (키: 유저ID, 값: 토큰)
         // 설정: 14일(2주) 뒤에 자동으로 사라짐
         redisTemplate.opsForValue().set(
-                member.getId(),
+                member.getLoginId(),
                 refreshToken,
                 14, 
                 TimeUnit.DAYS

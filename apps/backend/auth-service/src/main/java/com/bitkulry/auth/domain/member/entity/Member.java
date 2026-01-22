@@ -13,13 +13,16 @@ public class Member {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long memberSeq; // PK는 Long 타입 권장 (seq -> id로 변경)
+    @Column(name = "member_id")
+    private Long memberId;
 
-    @Column(nullable = false, unique = true, length = 50)
-    private String id; // 로그인용 ID (구분을 위해 이름 변경)
+    @Column(name = "login_id", nullable = false, unique = true, length = 50)
+    private String loginId;
 
     @Column(nullable = false)
     private String password;
 
-    private String role; // 권한 (USER, ADMIN)
+    @Enumerated(EnumType.STRING)
+    @Column(length = 20)
+    private Role role;
 }
