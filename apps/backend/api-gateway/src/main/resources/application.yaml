@@ -11,7 +11,12 @@ spring:
   cloud:
     gateway:
       routes:
-        - id: member-service
+        - id: member-service-public
+          uri: http://localhost:9001
+          predicates:
+            - Path=/api/v1/members/signup # /api/v1/members/check-id, /api/v1/members/email-verify # 콤마(,)로 여러 경로 지정 가능
+
+        - id: member-service-protected
           uri: http://localhost:9001
           predicates:
             - Path=/api/v1/members/**

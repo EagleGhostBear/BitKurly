@@ -1,6 +1,6 @@
 # Build & Dependency
 HELP.md
-/build/
+build/
 .gradle/
 out/
 bin/
