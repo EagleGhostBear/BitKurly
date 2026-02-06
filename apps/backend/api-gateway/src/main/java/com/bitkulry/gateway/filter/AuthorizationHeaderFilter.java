@@ -22,7 +22,7 @@ import reactor.core.publisher.Mono;
 @Component
 @Slf4j
 public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<AuthorizationHeaderFilter.Config> {
-    
+
     private final SecretKey key;
 
     public AuthorizationHeaderFilter(@Value("${jwt.secret}") String secret) {
@@ -41,7 +41,7 @@ public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<Auth
             ServerHttpRequest request = exchange.getRequest();
 
             // 1. 헤더에 Authorization이 있는지 확인
-            if (!request.getHeaders().containsKey(HttpHeaders.AUTHORIZATION)) {
+            if (request.getHeaders().get(HttpHeaders.AUTHORIZATION) == null) {
                 return onError(exchange, "No authorization header", HttpStatus.UNAUTHORIZED);
             }
 
@@ -71,7 +71,7 @@ public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<Auth
                     .build()
                     .parseSignedClaims(token)
                     .getPayload();
-            
+
             return claims.getSubject(); // 토큰 만들 때 넣었던 loginId 반환
         } catch (Exception e) {
             log.error("JWT Validation Failed: {}", e.getMessage());
