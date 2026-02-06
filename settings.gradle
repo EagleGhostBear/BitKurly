@@ -13,3 +13,6 @@ project(':member-service').projectDir = file('apps/backend/member-service')
 
 include 'order-service'
 project(':order-service').projectDir = file('apps/backend/order-service')
+
+include 'product-service'
+project(':product-service').projectDir = file('apps/backend/product-service')

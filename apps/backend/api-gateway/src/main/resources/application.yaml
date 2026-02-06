@@ -11,22 +11,22 @@ spring:
   cloud:
     gateway:
       routes:
-        - id: member-service-public
+        - id: auth-service
           uri: http://localhost:9001
+          predicates:
+            - Path=/auth/**
+
+        - id: member-service-public
+          uri: http://localhost:9002
           predicates:
             - Path=/api/v1/members/signup # /api/v1/members/check-id, /api/v1/members/email-verify # 콤마(,)로 여러 경로 지정 가능
 
         - id: member-service-protected
-          uri: http://localhost:9001
+          uri: http://localhost:9002
           predicates:
             - Path=/api/v1/members/**
           filters:
             - AuthorizationHeaderFilter
-
-        - id: auth-service
-          uri: http://localhost:9002
-          predicates:
-            - Path=/auth/**
 
   data:
     redis:
